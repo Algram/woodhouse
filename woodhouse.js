@@ -1,21 +1,27 @@
-var Bot = require('telegram-api');
-var Message = require('telegram-api/types/Message');
-var File = require('telegram-api/types/File');
+var Bot = require('node-telegram-bot-api');
 var config = require('./config.json');
 
-var CHAT_ID = config.chatid;
+var TOKEN = config.key;
 var MESSAGE_STR = process.argv[2];
 
-var bot = new Bot({
-  token: config.key
+var bot = new Bot(TOKEN, {polling: true});
+
+// Matches /shutdown [whatever]
+bot.onText(/\/shutdown (.+)/, function (msg, match) {
+  console.log('asd');
+  var fromId = msg.from.id;
+
+  switch (match[1]) {
+    case 'rpizero':
+      var resp = match[1];
+      bot.sendMessage(fromId, "Shutting down Raspberry Pi Zero..");
+
+      break;
+    default:
+      bot.sendMessage(fromId, "Sorry, I don't know that machine");
+  }
 });
 
-bot.start();
-
-var answer = new Message().text(MESSAGE_STR).to(CHAT_ID);
-
-bot.send(answer);
-
-setTimeout(function() {
+/*setTimeout(function() {
     process.exit();
-}, 10000);
+}, 10000);*/
