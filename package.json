@@ -15,5 +15,8 @@
   "bugs": {
     "url": "https://github.com/Algram/woodhouse/issues"
   },
-  "homepage": "https://github.com/Algram/woodhouse#readme"
+  "homepage": "https://github.com/Algram/woodhouse#readme",
+  "dependencies": {
+    "spotify-web-api-node": "^2.3.0"
+  }
 }
