@@ -1,4 +1,5 @@
 const Bot = require('node-telegram-bot-api');
+const spotify = require('./spotify');
 const config = require('./config.json');
 
 const TOKEN = config.key;
@@ -21,6 +22,10 @@ WH.onText(/\/shutdown (.+)/, (msg, match) => {
   }
 });
 
-/* setTimeout(function() {
-    process.exit();
-}, 10000);*/
+WH.onText(/\/getTracks (.+)/, (msg, match) => {
+  const fromId = msg.from.id;
+
+  spotify.getLikedSongs(data => {
+    WH.sendMessage(fromId, data);
+  });
+});

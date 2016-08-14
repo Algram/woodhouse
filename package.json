@@ -18,8 +18,10 @@
   "homepage": "https://github.com/Algram/woodhouse#readme",
   "dependencies": {
     "fritz-box": "0.0.2",
+    "googleapis": "^12.2.0",
     "node-fritzbox": "^0.1.1",
-    "spotify-web-api-node": "^2.3.0"
+    "spotify-web-api-node": "^2.3.0",
+    "youtube-dl": "^1.11.1"
   },
   "devDependencies": {
     "babel-cli": "^6.11.4",
