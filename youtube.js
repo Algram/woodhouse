@@ -2,7 +2,7 @@ const fs = require('fs');
 const path = require('path');
 const google = require('googleapis');
 const youtube = google.youtube('v3');
-const youtubeDl = google.youtube('youtube-dl');
+const youtubeDl = require('youtube-dl');
 const config = require('./config.json');
 
 function searchByVideoName(query, cb) {
