@@ -24,26 +24,28 @@ function searchByVideoName(query, cb) {
 
       videos.push(video);
     }
-
+    console.log(videos);
     cb(videos);
   });
 }
 
 function download(videoId, options) {
   const video = youtubeDl(`http://www.youtube.com/watch?v=${videoId}`,
-  // Optional arguments passed to youtube-dl.
-  ['--extract-audio', 'audio-format=mp3'],
-  // Additional options can be given for calling `child_process.execFile()`.
-  { cwd: __dirname });
+    // Optional arguments passed to youtube-dl.
+    ['-x', '--audio-format=mp3', '-f bestaudio'],
+    // Additional options can be given for calling `child_process.execFile()`.
+    {
+      cwd: __dirname
+    });
 
   // Will be called when the download starts.
   video.on('info', info => {
     console.log('Download started');
     console.log('filename:', info.filename);
     console.log('size:', info.size);
-  });
 
-  video.pipe(path.join(options.downloadDir, fs.createWriteStream(`${videoId}.mp3`)));
+    video.pipe(fs.createWriteStream(`${info.filename}.mp3`));
+  });
 }
 
 module.exports = {

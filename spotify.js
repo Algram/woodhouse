@@ -18,12 +18,17 @@ API.clientCredentialsGrant()
 function getLikedSongs(cb) {
   API.getPlaylist(config.spotify.username, config.spotify.likedFromRadioId)
   .then(data => {
+    const tracks = [];
     for (const item of data.body.tracks.items) {
-      console.log('addedAt', item.added_at);
-      console.log('name', item.track.name);
-      console.log('mainArtist', item.track.artists[0].name);
-      cb(item.track.name);
+      // console.log('addedAt', item.added_at);
+      // console.log('name', item.track.name);
+      // console.log('mainArtist', item.track.artists[0].name);
+
+      const fullName = `${item.track.artists[0].name} - ${item.track.name}`;
+      tracks.push(fullName);
     }
+
+    cb(tracks);
   }, err => {
     console.log('Something went wrong!', err);
     cb("Couldn't get tracks");

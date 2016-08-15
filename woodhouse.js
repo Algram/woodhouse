@@ -2,6 +2,8 @@ const Bot = require('node-telegram-bot-api');
 const spotify = require('./spotify');
 const config = require('./config.json');
 
+const youtube = require('./youtube');
+
 const TOKEN = config.key;
 // const MESSAGE_STR = process.argv[2];
 
@@ -27,5 +29,12 @@ WH.onText(/\/getTracks (.+)/, (msg, match) => {
 
   spotify.getLikedSongs(data => {
     WH.sendMessage(fromId, data);
+
+    for (const item of data) {
+      console.log('beep',item);
+      youtube.searchByVideoName(item, data => {
+        youtube.download(data[0].id);
+      });
+    }
   });
 });
