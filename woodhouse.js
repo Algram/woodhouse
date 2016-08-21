@@ -24,15 +24,11 @@ WH.onText(/\/shutdown (.+)/, (msg, match) => {
   }
 });
 
-WH.onText(/\/getTracks (.+)/, (msg, match) => {
-  const fromId = msg.from.id;
-
-  spotify.getLikedSongs(data => {
-    WH.sendMessage(fromId, data);
-
-    for (const item of data) {
-      console.log('beep',item);
+WH.onText(/\/syncSpotify/, () => {
+  spotify.getLikedSongs(songs => {
+    for (const item of songs) {
       youtube.searchByVideoName(item, data => {
+        // Download first video in the results list
         youtube.download(data[0].id);
       });
     }

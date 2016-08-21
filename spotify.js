@@ -16,7 +16,7 @@ API.clientCredentialsGrant()
   });
 
 function getLikedSongs(cb) {
-  API.getPlaylist(config.spotify.username, config.spotify.likedFromRadioId)
+  API.getPlaylist(config.spotify.username, config.spotify.syncPlaylistId)
   .then(data => {
     const tracks = [];
     for (const item of data.body.tracks.items) {
@@ -36,5 +36,5 @@ function getLikedSongs(cb) {
 }
 
 module.exports = {
-  getLikedSongs: getLikedSongs
+  getLikedSongs
 };

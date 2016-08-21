@@ -1,5 +1,4 @@
 const fs = require('fs');
-const path = require('path');
 const google = require('googleapis');
 const youtube = google.youtube('v3');
 const youtubeDl = require('youtube-dl');
@@ -29,7 +28,7 @@ function searchByVideoName(query, cb) {
   });
 }
 
-function download(videoId, options) {
+function download(videoId) {
   const video = youtubeDl(`http://www.youtube.com/watch?v=${videoId}`,
     // Optional arguments passed to youtube-dl.
     ['-x', '--audio-format=mp3', '-f bestaudio'],
@@ -41,14 +40,14 @@ function download(videoId, options) {
   // Will be called when the download starts.
   video.on('info', info => {
     console.log('Download started');
-    console.log('filename:', info.filename);
+    console.log('filename:', info._filename); // eslint-disable-line no-underscore-dangle
     console.log('size:', info.size);
 
-    video.pipe(fs.createWriteStream(`${info.filename}.mp3`));
+    video.pipe(fs.createWriteStream(`download/${info.filename}.mp3`));
   });
 }
 
 module.exports = {
-  searchByVideoName: searchByVideoName,
-  download: download
+  searchByVideoName,
+  download
 };
