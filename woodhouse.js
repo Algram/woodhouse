@@ -1,8 +1,8 @@
 const Bot = require('node-telegram-bot-api');
 const spotify = require('./spotify');
-const config = require('./config.json');
-
 const youtube = require('./youtube');
+
+const config = require('./config.json');
 
 const TOKEN = config.key;
 // const MESSAGE_STR = process.argv[2];
@@ -29,7 +29,12 @@ WH.onText(/\/syncSpotify/, () => {
     for (const item of songs) {
       youtube.searchByVideoName(item, data => {
         // Download first video in the results list
-        youtube.download(data[0].id);
+        const options = {
+          filename: item,
+          audioOnly: true
+        };
+
+        youtube.download(data[0].id, options);
       });
     }
   });

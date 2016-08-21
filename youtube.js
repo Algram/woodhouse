@@ -28,7 +28,8 @@ function searchByVideoName(query, cb) {
   });
 }
 
-function download(videoId) {
+function download(videoId, options) {
+  // TODO Add proper support for options
   const video = youtubeDl(`http://www.youtube.com/watch?v=${videoId}`,
     // Optional arguments passed to youtube-dl.
     ['-x', '--audio-format=mp3', '-f bestaudio'],
@@ -39,16 +40,16 @@ function download(videoId) {
 
   // Will be called when the download starts.
   video.on('info', info => {
-    const filename = info._filename; // eslint-disable-line no-underscore-dangle
-    filename
-      .replace('.webm', '')
-      .substring(0, filename.length - 12);
+    let filename = info._filename; // eslint-disable-line no-underscore-dangle
+    filename = filename
+                .replace('.webm', '')
+                .substring(0, filename.length - 17);
 
-    console.log('Download started');
-    console.log('filename:', info._filename); // eslint-disable-line no-underscore-dangle
-    console.log('size:', info.size);
+    if (options.filename) {
+      filename = options.filename;
+    }
 
-    video.pipe(fs.createWriteStream(`download/${info.filename}.mp3`));
+    video.pipe(fs.createWriteStream(`downloads/${filename}.mp3`));
   });
 }
 
