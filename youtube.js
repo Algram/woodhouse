@@ -39,6 +39,11 @@ function download(videoId) {
 
   // Will be called when the download starts.
   video.on('info', info => {
+    const filename = info._filename; // eslint-disable-line no-underscore-dangle
+    filename
+      .replace('.webm', '')
+      .substring(0, filename.length - 12);
+
     console.log('Download started');
     console.log('filename:', info._filename); // eslint-disable-line no-underscore-dangle
     console.log('size:', info.size);

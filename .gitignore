@@ -34,3 +34,5 @@ node_modules
 
 # Exclude config with api key
 config.json
+
+downloads
