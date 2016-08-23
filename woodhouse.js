@@ -24,6 +24,10 @@ WH.onText(/\/shutdown (.+)/, (msg, match) => {
   }
 });
 
+WH.onText(/\/showHome/, () => {
+  // TODO add fritzbox support to identify via wifi
+});
+
 WH.onText(/\/syncSpotify/, () => {
   spotify.getLikedSongs(songs => {
     for (const item of songs) {
