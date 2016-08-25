@@ -29,7 +29,7 @@ WH.onText(/\/showHome/, () => {
 });
 
 WH.onText(/\/syncSpotify/, () => {
-  spotify.getLikedSongs(songs => {
+  spotify.getSongsFromSharePlaylist(songs => {
     for (const item of songs) {
       youtube.searchByVideoName(item, data => {
         // Download first video in the results list

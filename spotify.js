@@ -15,7 +15,7 @@ API.clientCredentialsGrant()
     console.log('Something went wrong when retrieving an access token', err);
   });
 
-function getLikedSongs(cb) {
+function getSongsFromSharePlaylist(cb) {
   API.getPlaylist(config.spotify.username, config.spotify.syncPlaylistId)
   .then(data => {
     const tracks = [];
@@ -33,5 +33,5 @@ function getLikedSongs(cb) {
 
 
 module.exports = {
-  getLikedSongs
+  getSongsFromSharePlaylist
 };
