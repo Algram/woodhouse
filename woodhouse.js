@@ -35,6 +35,7 @@ WH.onText(/\/syncSpotify/, () => {
         // Download first video in the results list
         const options = {
           filename: item,
+          path: 'downloads',
           audioOnly: true
         };
 

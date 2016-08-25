@@ -20,10 +20,6 @@ function getLikedSongs(cb) {
   .then(data => {
     const tracks = [];
     for (const item of data.body.tracks.items) {
-      // console.log('addedAt', item.added_at);
-      // console.log('name', item.track.name);
-      // console.log('mainArtist', item.track.artists[0].name);
-
       const fullName = `${item.track.artists[0].name} - ${item.track.name}`;
       tracks.push(fullName);
     }
@@ -34,6 +30,7 @@ function getLikedSongs(cb) {
     cb("Couldn't get tracks");
   });
 }
+
 
 module.exports = {
   getLikedSongs

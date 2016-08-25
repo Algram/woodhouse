@@ -1,4 +1,5 @@
 const fs = require('fs');
+const path = require('path');
 const google = require('googleapis');
 const youtube = google.youtube('v3');
 const youtubeDl = require('youtube-dl');
@@ -23,12 +24,15 @@ function searchByVideoName(query, cb) {
 
       videos.push(video);
     }
-    console.log(videos);
     cb(videos);
   });
 }
 
-function download(videoId, options) {
+function download(videoId, options = {
+  filename: null,
+  path: 'downloads',
+  audioOnly: false
+}) {
   // TODO Add proper support for options
   const video = youtubeDl(`http://www.youtube.com/watch?v=${videoId}`,
     // Optional arguments passed to youtube-dl.
@@ -49,7 +53,10 @@ function download(videoId, options) {
       filename = options.filename;
     }
 
-    video.pipe(fs.createWriteStream(`downloads/${filename}.mp3`));
+    video.pipe(fs.createWriteStream(path.join(
+      options.path,
+      options.audioOnly ? `${filename}.mp3` : `${filename}.webm`
+    )));
   });
 }
 
