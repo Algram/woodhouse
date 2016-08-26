@@ -2,7 +2,8 @@ const fs = require('fs');
 const path = require('path');
 const google = require('googleapis');
 const youtube = google.youtube('v3');
-const youtubeDl = require('youtube-dl');
+const youtubeDl = require('ytdl-core');
+const youtubeStream = require('youtube-audio-stream');
 const config = require('./config.json');
 
 function searchByVideoName(query, cb) {
@@ -33,31 +34,24 @@ function download(videoId, options = {
   path: 'downloads',
   audioOnly: false
 }) {
-  // TODO Add proper support for options
-  const video = youtubeDl(`http://www.youtube.com/watch?v=${videoId}`,
-    // Optional arguments passed to youtube-dl.
-    ['-x', '--audio-format=mp3', '-f bestaudio'],
-    // Additional options can be given for calling `child_process.execFile()`.
-    {
-      cwd: __dirname
-    });
+  /* youtubeDl(`http://www.youtube.com/watch?v=${videoId}`, {
+    filter: 'audioonly'
+  })
+  .pipe(fs.createWriteStream(path.join(
+    options.path,
+    `${options.filename}.mp3`
+  )));*/
 
-  // Will be called when the download starts.
-  video.on('info', info => {
-    let filename = info._filename; // eslint-disable-line no-underscore-dangle
-    filename = filename
-                .replace('.webm', '')
-                .substring(0, filename.length - 17);
-
-    if (options.filename) {
-      filename = options.filename;
-    }
-
-    video.pipe(fs.createWriteStream(path.join(
+  const requestUrl = `http://www.youtube.com/watch?v=${videoId}`;
+  try {
+    youtubeStream(requestUrl)
+    .pipe(fs.createWriteStream(path.join(
       options.path,
-      options.audioOnly ? `${filename}.mp3` : `${filename}.webm`
+      `${options.filename}.mp3`
     )));
-  });
+  } catch (exception) {
+    console.log(exception);
+  }
 }
 
 module.exports = {
