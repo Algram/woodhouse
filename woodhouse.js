@@ -25,8 +25,14 @@ WH.onText(/\/shutdown (.+)/, (msg, match) => {
   }
 });
 
-WH.onText(/\/showHome/, () => {
-  // TODO add fritzbox support to identify via wifi
+WH.onText(/\/showHome/, (msg) => {
+  const fromId = msg.from.id;
+
+  fritzbox.getCurrentlyHomeDevices().then(devices => {
+    for (const device of devices) {
+      WH.sendMessage(fromId, device.name);
+    }
+  });
 });
 
 WH.onText(/\/syncSpotify/, () => {
