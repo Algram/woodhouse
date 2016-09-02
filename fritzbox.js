@@ -59,25 +59,26 @@ function getFritzBoxData() {
 }
 
 function getCurrentlyHomeDevices() {
-  const memberDevices = config.fritzbox.memberDevices;
-  let activeMemberDevices = [];
+  return new Promise(resolve => {
+    const memberDevices = config.fritzbox.memberDevices;
+    let activeMemberDevices = [];
 
-  getFritzBoxData().then(data => {
-    activeMemberDevices = memberDevices.map(device => {
-      if (data.active.some(activeDevice => activeDevice.ipv4 === device.ip)) {
-        return device;
-      }
+    getFritzBoxData().then(data => {
+      activeMemberDevices = memberDevices.map(device => {
+        if (data.active.some(activeDevice => activeDevice.ipv4 === device.ip)) {
+          return device;
+        }
 
-      return null;
+        return null;
+      });
+
+      activeMemberDevices = activeMemberDevices.filter(n => n !== null);
+
+      resolve(activeMemberDevices);
     });
-
-    activeMemberDevices = activeMemberDevices.filter(n => n !== null);
-
-    console.log(activeMemberDevices);
   });
 }
 
-getCurrentlyHomeDevices();
 
 module.exports = {
   getFritzBoxData,
