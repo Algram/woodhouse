@@ -21,6 +21,8 @@
     "fritz-box": "0.0.2",
     "googleapis": "^12.2.0",
     "node-fritzbox": "^0.1.1",
+    "node-telegram-bot-api": "^0.23.3",
+    "request": "^2.74.0",
     "spotify-web-api-node": "^2.3.0",
     "youtube-audio-stream": "0.0.26",
     "youtube-dl": "^1.11.1",
@@ -30,6 +32,11 @@
     "babel-cli": "^6.11.4",
     "babel-preset-es2015": "^6.13.2",
     "chai": "^3.5.0",
+    "eslint": "^3.4.0",
+    "eslint-config-airbnb": "^10.0.1",
+    "eslint-plugin-import": "^1.14.0",
+    "eslint-plugin-jsx-a11y": "^2.2.1",
+    "eslint-plugin-react": "^6.2.0",
     "mocha": "^3.0.2"
   }
 }

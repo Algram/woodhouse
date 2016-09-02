@@ -1,3 +1,4 @@
+const request = require('request');
 const FritzBoxAPI = require('fritz-box').default;
 
 const config = require('./config.json');
@@ -9,5 +10,3 @@ function showHome() {
     host: 'fritz.box'
   });
 }
-
-showHome();

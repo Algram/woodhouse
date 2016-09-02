@@ -4,7 +4,7 @@ const youtube = require('./youtube');
 
 const config = require('./config.json');
 
-const TOKEN = config.key;
+const TOKEN = config.telegram.key;
 // const MESSAGE_STR = process.argv[2];
 
 const WH = new Bot(TOKEN, { polling: true });
