@@ -3,10 +3,6 @@ const crypto = require('crypto');
 const request = require('request');
 
 
-function getActiveDevices() {
-  // TODO
-}
-
 function getFritzBoxData() {
   return new Promise((resolve, reject) => {
     request('http://fritz.box', (err, res, firstBody) => {
@@ -62,7 +58,28 @@ function getFritzBoxData() {
   });
 }
 
+function getCurrentlyHomeDevices() {
+  const memberDevices = config.fritzbox.memberDevices;
+  let activeMemberDevices = [];
+
+  getFritzBoxData().then(data => {
+    activeMemberDevices = memberDevices.map(device => {
+      if (data.active.some(activeDevice => activeDevice.ipv4 === device.ip)) {
+        return device;
+      }
+
+      return null;
+    });
+
+    activeMemberDevices = activeMemberDevices.filter(n => n !== null);
+
+    console.log(activeMemberDevices);
+  });
+}
+
+getCurrentlyHomeDevices();
+
 module.exports = {
   getFritzBoxData,
-  getActiveDevices
+  getCurrentlyHomeDevices
 };
