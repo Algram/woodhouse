@@ -4,11 +4,16 @@ const request = require('request');
 
 
 function getActiveDevices() {
-  request('http://fritz.box', (error, response, body) => {
-    if (!error && response.statusCode === 200) {
-      const challengePosStart = body.indexOf('"challenge":') + 14;
-      const challengePosEnd = body.indexOf(',', challengePosStart) - 1;
-      const challenge = body.substring(challengePosStart, challengePosEnd);
+  // TODO
+}
+
+function getFritzBoxData() {
+  return new Promise((resolve, reject) => {
+    request('http://fritz.box', (err, res, firstBody) => {
+      if (err) reject(Error(err));
+
+      const challengePosStart = firstBody.indexOf('"challenge":') + 14;
+      const challenge = firstBody.substring(challengePosStart, challengePosStart + 8);
 
       let paramResponse = `${challenge}-${config.fritzbox.password}`;
 
@@ -19,34 +24,45 @@ function getActiveDevices() {
 
       paramResponse = `${challenge}-${digest}`;
 
-      request.post( {url:'http://fritz.box', form: {
-        response: paramResponse,
-        lp: 'netDev',
-        username: ''
-      } }, (err, httpResponse, body) => {
-        const sessionIdPosStart = body.indexOf('"sid":') + 8;
-        const sessionId = body.substring(sessionIdPosStart, sessionIdPosStart + 16);
-
-        console.log(sessionIdPosStart, sessionId);
-
-        request.post({ url: 'http://fritz.box/data.lua',
+      const options = {
+        url: 'http://fritz.box',
         form: {
-          sid: sessionId,
-          lang: 'en',
-          page: 'netDev',
-          type: 'all',
-          xhr: 1,
-          no_sidrenew: ''
-        } }, (err,httpResponse,body) => {
-          console.log(body);
+          response: paramResponse,
+          lp: 'netDev',
+          username: ''
+        }
+      };
+
+      request.post(options, (err, res, secondBody) => {
+        if (err) reject(Error(err));
+
+        const sessionIdPosStart = secondBody.indexOf('"sid":') + 8;
+        const sessionId = secondBody.substring(sessionIdPosStart, sessionIdPosStart + 16);
+
+        const options = {
+          url: 'http://fritz.box/data.lua',
+          form: {
+            sid: sessionId,
+            lang: 'en',
+            page: 'netDev',
+            type: 'all',
+            xhr: 1,
+            no_sidrenew: ''
+          }
+        };
+
+        request.post(options, (err, res, thirdBody) => {
+          if (err) reject(Error(err));
+
+          const thirdBodyParsed = JSON.parse(thirdBody);
+          resolve(thirdBodyParsed.data);
         });
       });
-    }
+    });
   });
 }
 
-function getFritzBoxData() {
-
-}
-
-getActiveDevices();
+module.exports = {
+  getFritzBoxData,
+  getActiveDevices
+};

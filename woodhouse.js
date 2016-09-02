@@ -1,6 +1,7 @@
 const Bot = require('node-telegram-bot-api');
 const spotify = require('./spotify');
 const youtube = require('./youtube');
+const fritzbox = require('./fritzbox');
 
 const config = require('./config.json');
 
