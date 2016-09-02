@@ -4,7 +4,6 @@ const request = require('request');
 const cheerio = require('cheerio');
 
 
-
 function getActiveDevices() {
   request('http://fritz.box', (error, response, body) => {
     if (!error && response.statusCode === 200) {
@@ -12,12 +11,10 @@ function getActiveDevices() {
       const challengePosEnd = body.indexOf(',', challengePosStart) - 1;
       const challenge = body.substring(challengePosStart, challengePosEnd);
 
-      console.log(challenge);
-      console.log(md5.hex('test'));
+      let paramResponse = `${challenge} - ${config.fritzbox.password}`;
+      paramResponse = `${challenge} - ${md5.hex(paramResponse)}`;
 
-      //let $ = cheerio.load(body);
-
-
+      console.log(paramResponse);
     }
   });
 }
