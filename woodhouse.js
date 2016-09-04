@@ -25,7 +25,7 @@ WH.onText(/\/shutdown (.+)/, (msg, match) => {
   }
 });
 
-WH.onText(/\/showHome/, (msg) => {
+WH.onText(/\/show_home/, (msg) => {
   const fromId = msg.from.id;
 
   fritzbox.getCurrentlyHomeDevices().then(devices => {
@@ -35,7 +35,7 @@ WH.onText(/\/showHome/, (msg) => {
   });
 });
 
-WH.onText(/\/syncSpotify/, () => {
+WH.onText(/\/sync_spotify/, () => {
   spotify.getSongsFromSharePlaylist(songs => {
     for (const item of songs) {
       youtube.searchByVideoName(item, data => {
