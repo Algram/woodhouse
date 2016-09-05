@@ -1,9 +1,9 @@
-const fs = require('fs');
+const config = require('./config.json');
 const path = require('path');
 const google = require('googleapis');
 const youtube = google.youtube('v3');
-const youtubeStream = require('youtube-audio-stream');
-const config = require('./config.json');
+const ffmpeg = require('fluent-ffmpeg');
+const youtubeDl = require('youtube-dl');
 
 function searchByVideoName(query, cb) {
   const params = {
@@ -28,30 +28,48 @@ function searchByVideoName(query, cb) {
   });
 }
 
-function download(videoId, options = {
-  filename: null,
+function download(url, options = {
   path: 'downloads',
   audioOnly: false
 }) {
-  /* youtubeDl(`http://www.youtube.com/watch?v=${videoId}`, {
-    filter: 'audioonly'
-  })
-  .pipe(fs.createWriteStream(path.join(
-    options.path,
-    `${options.filename}.mp3`
-  )));*/
+  return new Promise((resolve, reject) => {
+    let format = 'mp4';
+    if (options.audioOnly) {
+      format = 'mp3';
+    }
 
-  const requestUrl = `http://www.youtube.com/watch?v=${videoId}`;
-  try {
-    youtubeStream(requestUrl)
-    .pipe(fs.createWriteStream(path.join(
-      options.path,
-      `${options.filename}.mp3`
-    )));
-  } catch (exception) {
-    console.log(exception);
-  }
+    // TODO Add proper support for options
+    const video = youtubeDl(url,
+      // Optional arguments passed to youtube-dl.
+      ['--format=18'],
+      // Additional options can be given for calling `child_process.execFile()`.
+      { cwd: __dirname });
+
+    // Will be called when the download starts.
+    video.on('info', info => {
+      let filename = info.filename;
+      filename = filename
+                  .replace('.mp4', '')
+                  .substring(0, filename.length - 16);
+
+      // Convert to audio
+      ffmpeg({ source: video })
+        .on('end', () => {
+          const videoObj = {
+            name: filename,
+            url,
+            downloading: false,
+            format
+          };
+
+          resolve(videoObj);
+        })
+        .toFormat(format)
+        .save(path.join(options.path, `${filename}.${format}`));
+    });
+  });
 }
+
 
 module.exports = {
   searchByVideoName,
