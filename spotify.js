@@ -15,21 +15,24 @@ API.clientCredentialsGrant()
     console.log('Something went wrong when retrieving an access token', err);
   });
 
-function getSongsFromSharePlaylist(cb) {
-  API.getPlaylist(config.spotify.username, config.spotify.syncPlaylistId)
-  .then(data => {
-    const tracks = [];
-    for (const item of data.body.tracks.items) {
-      const fullName = `${item.track.artists[0].name} - ${item.track.name}`;
-      tracks.push(fullName);
-    }
+function getSongsFromSharePlaylist() {
+  return new Promise((resolve, reject) => {
+    API.getPlaylist(config.spotify.username, config.spotify.syncPlaylistId)
+    .then(data => {
+      const tracks = [];
+      for (const item of data.body.tracks.items) {
+        const fullName = `${item.track.artists[0].name} - ${item.track.name}`;
+        tracks.push(fullName);
+      }
 
-    cb(tracks);
-  }, err => {
-    console.log('Something went wrong!', err);
-    cb("Couldn't get tracks");
+      resolve(tracks);
+    }, err => {
+      console.log('Something went wrong!', err);
+      reject("Couldn't get tracks");
+    });
   });
 }
+
 
 
 module.exports = {

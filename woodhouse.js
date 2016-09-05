@@ -35,8 +35,11 @@ WH.onText(/\/show_home/, (msg) => {
   });
 });
 
-WH.onText(/\/sync_spotify/, () => {
-  spotify.getSongsFromSharePlaylist(songs => {
+WH.onText(/\/sync_spotify/, (msg) => {
+  const fromId = msg.from.id;
+
+  spotify.getSongsFromSharePlaylist().then(songs => {
+    const promises = [];
     for (const item of songs) {
       youtube.searchByVideoName(item, data => {
         // Download first video in the results list
@@ -46,8 +49,15 @@ WH.onText(/\/sync_spotify/, () => {
           audioOnly: true
         };
 
-        youtube.download(data[0].id, options);
+        const promise = youtube.download(data[0].id, options);
+        promises.push(promise);
       });
+
+      if (promises.length === songs.length) {
+        Promise.all(promises).then(() => {
+          WH.sendMessage(fromId, 'Sync complete.');
+        });
+      }
     }
   });
 });
