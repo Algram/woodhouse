@@ -53,7 +53,9 @@ WH.onText(/\/sync_spotify/, (msg) => {
         promises.push(promise);
       });
 
+      console.log(promises.length, songs.length);
       if (promises.length === songs.length) {
+        console.log('beep');
         Promise.all(promises).then(() => {
           WH.sendMessage(fromId, 'Sync complete.');
         });

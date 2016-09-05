@@ -34,7 +34,6 @@ function getSongsFromSharePlaylist() {
 }
 
 
-
 module.exports = {
   getSongsFromSharePlaylist
 };

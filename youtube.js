@@ -1,30 +1,33 @@
 const config = require('./config.json');
 const path = require('path');
 const google = require('googleapis');
+
 const youtube = google.youtube('v3');
 const ffmpeg = require('fluent-ffmpeg');
 const youtubeDl = require('youtube-dl');
 
-function searchByVideoName(query, cb) {
-  const params = {
-    auth: config.youtube.key,
-    part: 'snippet',
-    q: query,
-    type: 'video'
-  };
+function searchByVideoName(query) {
+  return new Promise((resolve, reject) => {
+    const params = {
+      auth: config.youtube.key,
+      part: 'snippet',
+      q: query,
+      type: 'video'
+    };
 
-  youtube.search.list(params, (err, data) => {
-    const videos = [];
+    youtube.search.list(params, (err, data) => {
+      const videos = [];
 
-    for (const item of data.items) {
-      const video = {
-        id: item.id.videoId,
-        title: item.snippet.title
-      };
+      for (const item of data.items) {
+        const video = {
+          id: item.id.videoId,
+          title: item.snippet.title
+        };
 
-      videos.push(video);
-    }
-    cb(videos);
+        videos.push(video);
+      }
+      resolve(videos);
+    });
   });
 }
 
