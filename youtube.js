@@ -2,7 +2,6 @@ const fs = require('fs');
 const path = require('path');
 const google = require('googleapis');
 const youtube = google.youtube('v3');
-const youtubeDl = require('ytdl-core');
 const youtubeStream = require('youtube-audio-stream');
 const config = require('./config.json');
 

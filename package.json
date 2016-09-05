@@ -19,18 +19,11 @@
   "dependencies": {
     "cheerio": "^0.22.0",
     "crypto": "0.0.3",
-    "ffmpeg": "0.0.4",
-    "fritz-box": "0.0.2",
     "googleapis": "^12.2.0",
-    "node-fritzbox": "^0.1.1",
     "node-telegram-bot-api": "^0.23.3",
-    "querystring": "^0.2.0",
     "request": "^2.74.0",
     "spotify-web-api-node": "^2.3.0",
-    "xml2js": "^0.4.17",
-    "youtube-audio-stream": "0.0.26",
     "youtube-dl": "^1.11.1",
-    "ytdl-core": "^0.7.17"
   },
   "devDependencies": {
     "babel-cli": "^6.11.4",
