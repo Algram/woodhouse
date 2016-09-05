@@ -1,10 +1,22 @@
 const config = require('./config.json');
 const path = require('path');
+const fs = require('fs');
 const google = require('googleapis');
 
 const youtube = google.youtube('v3');
 const ffmpeg = require('fluent-ffmpeg');
 const youtubeDl = require('youtube-dl');
+
+
+function exists(filename, cb) {
+  fs.access(filename, fs.F_OK, (err) => {
+    if (!err) {
+      cb(true);
+    } else {
+      cb(false);
+    }
+  });
+}
 
 function searchByVideoName(query) {
   return new Promise((resolve, reject) => {
@@ -51,7 +63,7 @@ function download(videoId, options = {
 
     // Will be called when the download starts.
     video.on('info', info => {
-      let filename = info.filename;
+      let filename = info._filename;
       filename = filename
                   .replace('.mp4', '')
                   .substring(0, filename.length - 16);
@@ -60,13 +72,21 @@ function download(videoId, options = {
         filename = options.filename;
       }
 
-      // Convert to audio
-      ffmpeg({ source: video })
-        .on('end', () => {
+      const filePath = path.join(options.path, `${filename}.${format}`);
+
+      exists(filePath, (doesExist) => {
+        if (!doesExist) {
+          // Convert to audio
+          ffmpeg({ source: video })
+          .on('end', () => {
+            resolve();
+          })
+          .toFormat(format)
+          .save(filePath);
+        } else {
           resolve();
-        })
-        .toFormat(format)
-        .save(path.join(options.path, `${filename}.${format}`));
+        }
+      });
     });
   });
 }
