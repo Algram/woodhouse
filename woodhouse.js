@@ -41,7 +41,7 @@ WH.onText(/\/sync_spotify/, (msg) => {
   spotify.getSongsFromSharePlaylist().then(songs => {
     const promises = [];
     for (const item of songs) {
-      youtube.searchByVideoName(item, data => {
+      youtube.searchByVideoName(item).then(data => {
         // Download first video in the results list
         const options = {
           filename: item,
@@ -51,15 +51,13 @@ WH.onText(/\/sync_spotify/, (msg) => {
 
         const promise = youtube.download(data[0].id, options);
         promises.push(promise);
-      });
 
-      console.log(promises.length, songs.length);
-      if (promises.length === songs.length) {
-        console.log('beep');
-        Promise.all(promises).then(() => {
-          WH.sendMessage(fromId, 'Sync complete.');
-        });
-      }
+        if (promises.length === songs.length) {
+          Promise.all(promises).then(() => {
+            WH.sendMessage(fromId, 'Sync complete.');
+          });
+        }
+      });
     }
   });
 });
