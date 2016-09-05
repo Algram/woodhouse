@@ -28,11 +28,12 @@ function searchByVideoName(query, cb) {
   });
 }
 
-function download(url, options = {
+function download(videoId, options = {
   path: 'downloads',
   audioOnly: false
 }) {
   return new Promise((resolve, reject) => {
+    const url = `http://www.youtube.com/watch?v=${videoId}`;
     let format = 'mp4';
     if (options.audioOnly) {
       format = 'mp3';
@@ -51,6 +52,10 @@ function download(url, options = {
       filename = filename
                   .replace('.mp4', '')
                   .substring(0, filename.length - 16);
+
+      if (options.filename) {
+        filename = options.filename;
+      }
 
       // Convert to audio
       ffmpeg({ source: video })
