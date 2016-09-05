@@ -55,14 +55,7 @@ function download(url, options = {
       // Convert to audio
       ffmpeg({ source: video })
         .on('end', () => {
-          const videoObj = {
-            name: filename,
-            url,
-            downloading: false,
-            format
-          };
-
-          resolve(videoObj);
+          resolve();
         })
         .toFormat(format)
         .save(path.join(options.path, `${filename}.${format}`));
