@@ -4,6 +4,7 @@
   "description": "",
   "main": "index.js",
   "scripts": {
+    "start": "node woodhouse.js",
     "test": "node_modules/.bin/mocha --reporter spec"
   },
   "repository": {
