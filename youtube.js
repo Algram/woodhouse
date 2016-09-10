@@ -28,6 +28,10 @@ function searchByVideoName(query) {
     };
 
     youtube.search.list(params, (err, data) => {
+      if (err) {
+        reject(err);
+      }
+
       const videos = [];
 
       for (const item of data.items) {
