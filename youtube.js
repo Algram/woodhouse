@@ -67,7 +67,7 @@ function download(videoId, options = {
 
     // Will be called when the download starts.
     video.on('info', info => {
-      let filename = info._filename;
+      let filename = info._filename; // eslint-disable-line no-underscore-dangle
       filename = filename
                   .replace('.mp4', '')
                   .substring(0, filename.length - 16);
@@ -82,6 +82,9 @@ function download(videoId, options = {
         if (!doesExist) {
           // Convert to audio
           ffmpeg({ source: video })
+          .on('error', err => {
+            reject(err.message);
+          })
           .on('end', () => {
             resolve();
           })
